@@ -4,9 +4,11 @@ const blockHeight = 20;
 const boardWidth = 560;
 const boardHeight = 300;
 const ballDiameter = 20;
-let xDirection = 2;
+const scoreDisplay = document.querySelector("#score");
+let xDirection = -2;
 let yDirection = 2;
 let timerId;
+let score = 0;
 
 const userStart = [230, 10];
 let currentPosition = userStart;
@@ -42,7 +44,6 @@ const blocks = [
   new Block(340, 210),
   new Block(450, 210),
 ];
-console.log(blocks);
 
 function addBlocks() {
   for (let i = 0; i < blocks.length; i++) {
@@ -106,6 +107,23 @@ timerId = setInterval(moveBall, 30);
 
 //check for collisions
 function checkForCollisions() {
+  //check for block collisions
+  for (let i = 0; i < blocks.length; i++) {
+    if (
+      ballCurrentPosition[0] > blocks[i].bottomLeft[0] &&
+      ballCurrentPosition[0] < blocks[i].bottomRight[0] &&
+      ballCurrentPosition[1] + ballDiameter > blocks[i].bottomLeft[1] &&
+      ballCurrentPosition[1] < blocks[i].topLeft[1]
+    ) {
+      const allBlocks = Array.from(document.querySelectorAll(".block"));
+      allBlocks[i].classList.remove("block");
+      blocks.splice(i, 1);
+      changeDirection();
+      score++;
+      scoreDisplay.innerHTML = score;
+    }
+  }
+
   //check for wall collisions
   if (
     ballCurrentPosition[0] >= boardWidth - ballDiameter ||
@@ -117,7 +135,9 @@ function checkForCollisions() {
 
   //checkforgameover
   if (ballCurrentPosition[1] <= 0) {
-    clearIntervalI(timerId);
+    clearInterval(timerId);
+    scoreDisplay.innerHTML = "You lost";
+    document.removeEventListener("keydown", moveUser);
   }
 }
 
