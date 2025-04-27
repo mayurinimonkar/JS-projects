@@ -103,7 +103,7 @@ function moveBall() {
   checkForCollisions();
 }
 
-timerId = setInterval(moveBall, 30);
+timerId = setInterval(moveBall, 20);
 
 //check for collisions
 function checkForCollisions() {
@@ -129,6 +129,16 @@ function checkForCollisions() {
     ballCurrentPosition[0] >= boardWidth - ballDiameter ||
     ballCurrentPosition[1] >= boardHeight - ballDiameter ||
     ballCurrentPosition[0] <= 0
+  ) {
+    changeDirection();
+  }
+
+  //check for user collisions
+  if (
+    ballCurrentPosition[0] > currentPosition[0] &&
+    ballCurrentPosition[0] < currentPosition[0] + blockWidth &&
+    ballCurrentPosition[1] > currentPosition[1] &&
+    ballCurrentPosition[1] < currentPosition[1] + blockHeight
   ) {
     changeDirection();
   }
